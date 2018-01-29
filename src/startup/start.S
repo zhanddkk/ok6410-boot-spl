@@ -18,6 +18,9 @@ reset:
 	bl __disable_all_soft_interrupt
 	bl __init_system_clock
 	bl __init_ddr2_sdram
+	bl __enable_vfp
+	bl __clear_bss
+	bl __init_stack
 	/* step into C code */
 	bl main
 
@@ -107,6 +110,7 @@ __disable_all_soft_interrupt:
 
 
 __init_system_clock:
+	ldr r0, =SYS_CLK_BASE
 	/* select all clock to FIN */
 	ldr r1, [r0, #SYS_CLK_CLK_SRC_OFFSET]
 	bic r1, r1, #0x3
@@ -182,6 +186,7 @@ __init_system_clock:
 1:
 	subs r1, r1, #1
 	bne 1b
+
 	/* select all clock to FOUT */
 	ldr r1, [r0, #SYS_CLK_CLK_SRC_OFFSET]
 	orr r1, r1, #0x3
@@ -274,8 +279,8 @@ __loop_check_sync_ack:
       - Define PASR or DS operating type of the device
 */
 __init_ddr2_sdram:
-	/* Gating HCLK for SDMA0 (0: mask, 1: pass) */
 	ldr r0, =SYS_CLK_BASE
+	/* Gating HCLK for SDMA0 (0: mask, 1: pass) */
 	ldr r1, [r0, #SYS_CLK_HCLK_GATE_OFFSER]
 	orr r1, r1, #(1 << 26)
 	str r1, [r0, #SYS_CLK_HCLK_GATE_OFFSER]
@@ -390,7 +395,19 @@ __loop_check_dmc1_ready:
 
 	mov pc, lr
 
+
 __clear_bss:
+	ldr r0, _bss_start
+	ldr r1, _bss_end
+	mov r2, #0
+1:
+	str r2, [r0], #4
+	cmp r0, r1
+	bne 1b
+	mov pc, lr
+
+__init_stack:
+	ldr sp, =0x5fffffff
 	mov pc, lr
 
 #define VFP_ENABLE	0x40000000
@@ -406,3 +423,11 @@ __enable_vfp:
 	nop
 	nop
 	bx lr
+
+.globl _bss_start
+_bss_start:
+	.word __bss_start
+
+.globl _bss_end
+_bss_end:
+	.word __bss_end
