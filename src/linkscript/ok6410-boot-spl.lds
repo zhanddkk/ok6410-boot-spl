@@ -16,6 +16,7 @@ SECTIONS
 	{
 		*(.vectors)
 		./src/startup/start.o (.text*)
+		./src/main/irom.o (.text*)
 		*(.text*)
 	} >IRAM
 	
@@ -24,11 +25,12 @@ SECTIONS
 		*(.data*)
 	} >IRAM
 	
-	. = ALIGN(4);
-	__bss_start = ADDR(.bss);
+
 	.bss (NOLOAD): ALIGN(4)
 	{
+		__bss_start = .;
 		*(*.bss*)
 	} >DDRAM
-	__bss_end = ADDR(.bss) + SIZEOF(.bss);
+	. = ALIGN(4);
+	__bss_end = .;
 }

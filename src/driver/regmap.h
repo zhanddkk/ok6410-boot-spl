@@ -1,9 +1,10 @@
 /***********************************************************************************************************************
  * Original Author : Register Map File Generation Tool (v0.0.1)
  * File Path       : regmap.h
- * Item Number     : 30
+ * Item Number     : 31
  *
  * Please don't edit this file manually!!!
+ *  [0x70200000 ~ 0x70200064] Nand flash controller: 26 members
  *  [0x7E00F000 ~ 0x7E00F90C] System Control: 43 members
  *  [0x7E00FA00 ~ 0x7E00FA0C] User Information: 4 members
  *  [0x7F005000 ~ 0x7F005038] UART 0: 15 members
@@ -43,6 +44,38 @@
 #define __O     volatile             /*!< Defines 'write only' permissions */
 #define __IO    volatile             /*!< Defines 'read / write' permissions */
 
+/*====================================================================================================================*/
+/* [0x70200000 ~ 0x70200064] Nand flash controller: 26 members */
+/*--------------------------------------------------------------------------------------------------------------------*/
+struct nand_flash_controller_reg_map {
+    __IO uint32_t NFCONF; /* 0x70200000: Configuration register 0xX000_100X */
+    __IO uint32_t NFCONT; /* 0x70200004: Control register 0x0001_00C6 */
+    __IO uint32_t NFCMMD; /* 0x70200008: Command register 0x0000_0000 */
+    __IO uint32_t NFADDR; /* 0x7020000C: Address register 0x0000_0000 */
+    __IO uint32_t NFDATA; /* 0x70200010: Data register 0xXXXX_XXXX */
+    __IO uint32_t NFMECCD0; /* 0x70200014: 1st and 2nd main ECC data register 0x0000_0000 */
+    __IO uint32_t NFMECCD1; /* 0x70200018: 3rd and 4th main ECC data register 0x0000_0000 */
+    __IO uint32_t NFSECCD; /* 0x7020001C: Spare ECC read register 0x0000_0000 */
+    __IO uint32_t NFSBLK; /* 0x70200020: Programmable start block address register 0x0000_0000 */
+    __IO uint32_t NFEBLK; /* 0x70200024: Programmable end block address register 0x0000_0000 */
+    __IO uint32_t NFSTAT; /* 0x70200028: NAND status registet 0x0080_001D */
+    __I uint32_t NFECCERR0; /* 0x7020002C: ECC error status0 register 0xXXXX_XXXX */
+    __I uint32_t NFECCERR1; /* 0x70200030: ECC error status1 register 0x0000_0000 */
+    __I uint32_t NFMECC0; /* 0x70200034: Generated ECC status0 register 0xXXXX_XXXX */
+    __I uint32_t NFMECC1; /* 0x70200038: Generated ECC status1 register 0xXXXX_XXXX */
+    __I uint32_t NFSECC; /* 0x7020003C: Generated Spare area ECC status register 0xXXXX_XXXX */
+    __I uint32_t NFMLCBITPT; /* 0x70200040: 4-bit ECC error bit pattern register 0x0000_0000 */
+    __I uint32_t NF8ECCERR0; /* 0x70200044: 8bit ECC error status0 register 0x4000_0000 */
+    __I uint32_t NF8ECCERR1; /* 0x70200048: 8bit ECC error status1 register 0x0000_0000 */
+    __I uint32_t NF8ECCERR2; /* 0x7020004C: 8bit ECC error status2 register 0x0000_0000 */
+    __I uint32_t NFM8ECC0; /* 0x70200050: Generated 8-bit ECC status0 register 0xXXXX_XXXX */
+    __I uint32_t NFM8ECC1; /* 0x70200054: Generated 8-bit ECC status1 register 0xXXXX_XXXX */
+    __I uint32_t NFM8ECC2; /* 0x70200058: Generated 8-bit ECC status2 register 0xXXXX_XXXX */
+    __I uint32_t NFM8ECC3; /* 0x7020005C: Generated 8-bit ECC status3 register 0xXXXX_XXXX */
+    __I uint32_t NFMLC8BITPT0; /* 0x70200060: 8-bit ECC error bit pattern 0 register 0x0000_0000 */
+    __I uint32_t NFMLC8BITPT1; /* 0x70200064: 8-bit ECC error bit pattern 1 register 0x0000_0000 */
+};
+#define r_nand_flash_controller ((volatile struct nand_flash_controller_reg_map *)0x70200000)
 /*====================================================================================================================*/
 /* [0x7E00F000 ~ 0x7E00F90C] System Control: 43 members */
 /*--------------------------------------------------------------------------------------------------------------------*/

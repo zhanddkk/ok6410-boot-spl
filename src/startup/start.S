@@ -6,13 +6,14 @@
  */
 
     .global reset
-
+	.extern test_boot_mode
 reset:
     /* set the cpu to SVC32 mode */
     mrs r0, cpsr
     bic r0, r0, #0x3f
     orr r0, r0, #0xd3
     msr cpsr, r0
+
     /* init sequence */
     bl __disable_watch_dog
     bl __disable_all_soft_interrupt
@@ -151,7 +152,7 @@ __loop_check_sync_ack:
     EPLL| 300               | 0xE11
     =============================================
     */
-    ldr r1, =0xFFFF
+    ldr r1, =0xFFF
     str r1, [r0, #SYS_CLK_APLL_LOCK_OFFSET]
     str r1, [r0, #SYS_CLK_MPLL_LOCK_OFFSET]
     str r1, [r0, #SYS_CLK_EPLL_LOCK_OFFSET]
@@ -404,14 +405,15 @@ __loop_check_dmc1_ready:
 __clear_bss:
     ldr r0, _bss_start
     ldr r1, _bss_end
+
     mov r2, #0x0
-2:
-	cmp r0, r1
-    beq 1f
-    str r2, [r0], #4
-	b 2b
 1:
+    cmp r0, r1
+    strcc   r2, [r0], #4
+    bcc 1b
+
 	mov pc, lr
+
 
 __init_stack:
     ldr sp, _stack
